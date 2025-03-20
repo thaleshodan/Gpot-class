@@ -1,0 +1,92 @@
+# Configurações principais do honeypot
+honeypot:
+  name: "FakeHoneypotServer"              # Nome do honeypot, mais realista
+  description: "Servidor SSH, Telnet e FTP falso para capturar intrusões"
+  version: "2.0.0"                        # Versão mais convincente
+
+# Configurações de portas
+ports:
+  ssh: 22                                # Porta SSH configurada corretamente
+  telnet: 23                             # Porta Telnet configurada corretamente
+  ftp: 21                                # Porta FTP configurada corretamente
+
+# Configurações de IPs banidos
+banned_ips:
+  # Adicionar IPs conhecidos ou suspeitos
+  - "192.168.1.100"
+  - "10.0.0.5"
+  - "198.51.100.14"  # IP exemplo de ataque
+
+# Configurações de tempo de sessão
+session_timeout: 600                      # Tempo de sessão mais longo (em segundos), 600s = 10 minutos
+session_persistence: true                 # Permite que sessões persistam entre tentativas de conexão, fazendo o invasor acreditar que tem sucesso
+
+# Banco de dados de logs
+database:
+  type: "sqlite"                          # Banco de dados SQLite
+  file: "honeypot_logs.db"                 # Nome do arquivo de banco de dados SQLite
+
+# Respostas do honeypot (mensagens realistas para enganar)
+responses:
+  ssh:
+    welcome_message: "SSH-2.0-OpenSSH_7.9p1 Ubuntu-10ubuntu0.1"
+    login_prompt: "login: "
+    password_prompt: "Password: "
+    incorrect_login: "Permission denied, please try again."
+    success_message: "Access granted. Welcome to the system. Type 'help' for assistance."
+
+  telnet:
+    welcome_message: "Welcome to Ubuntu 20.04 LTS (Focal Fossa) - Telnet access"
+    login_prompt: "login: "
+    password_prompt: "Password: "
+    incorrect_login: "Login incorrect. Try again."
+    success_message: "Login successful. You are now connected to the mainframe."
+
+  ftp:
+    welcome_message: "220 (FTP) File Transfer Protocol server ready"
+    login_prompt: "Username: "
+    password_prompt: "Password: "
+    incorrect_login: "530 Login incorrect. Please try again."
+    success_message: "230 User logged in. Welcome."
+
+# Segurança do honeypot
+security:
+  max_attempts: 10                        # Aumenta o número de tentativas para enganar mais
+  ban_duration: 86400                     # Duração de banimento aumentada para 24 horas (em segundos)
+  persistent_ban: true                    # Banir IPs persistentemente após um certo número de tentativas
+  brute_force_detection: true             # Detecta tentativas de força bruta e bloqueia automaticamente
+
+# Configurações de resposta avançadas
+advanced_responses:
+  enable_fake_shell: true                 # Ativa uma shell falsa, respondendo a comandos comuns
+  enable_fake_commands: true              # Comandos como 'ls', 'cat', etc. retornam resultados falsos
+  simulate_system_failure: true           # Simula falhas de sistema, como "Segmentation fault" e "Out of memory"
+
+# Logs detalhados e persistentes
+logging:
+  level: "DEBUG"                          # Nível de log em debug para capturar todas as tentativas
+  log_to_file: true                       # Armazena logs em arquivo
+  log_file: "honeypot_debug.log"           # Nome do arquivo de log
+
+# Estratégias para capturar informações do atacante
+capture_data:
+  enable_capture: true                    # Ativa a captura de dados (comandos executados, IPs, etc)
+  capture_commands: true                  # Registra todos os comandos executados
+  capture_failed_attempts: true           # Registra tentativas falhas de login
+
+# Simulação de comportamento real
+simulation:
+  enable_fake_system_info: true           # Responde com informações do sistema, como 'uname -a' e 'lsb_release'
+  fake_system_info: "Ubuntu 20.04.3 LTS"
+  simulate_network_activity: true         # Faz o servidor parecer ocupado com atividade de rede para enganar
+
+# Configurações adicionais para enganar
+additional_simulations:
+  simulate_sudo_access: true              # Simula um erro ao tentar usar sudo (engana quem tenta escalar privilégios)
+  simulate_vulnerabilities: true          # Responde com falhas simuladas em programas de sistema, como 'sudo' ou 'wget'
+
+# Configuração de IPs falsos
+fake_ips:
+  enable_fake_ips: true                   # Responde com IPs falsos para confundir as investigações
+  fake_ip_range: "198.51.100.0/24"        # Range de IPs falsos a serem retornados
+
