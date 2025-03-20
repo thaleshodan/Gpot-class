@@ -1,0 +1,24 @@
+-- Criar a tabela de logs detalhados
+CREATE TABLE IF NOT EXISTS logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp TEXT NOT NULL,
+    ip TEXT NOT NULL,
+    event TEXT NOT NULL,
+    level TEXT NOT NULL
+);
+
+-- Criar índice para acelerar buscas por IP
+CREATE INDEX IF NOT EXISTS idx_logs_ip ON logs(ip);
+
+-- Criar a tabela de IPs banidos
+CREATE TABLE IF NOT EXISTS banned_ips (
+    ip TEXT PRIMARY KEY,
+    banned_at TEXT NOT NULL
+);
+
+-- Criar trigger para deletar logs antigos automaticamente após 30 dias
+CREATE TRIGGER IF NOT EXISTS delete_old_logs
+AFTER INSERT ON logs
+BEGIN
+    DELETE FROM logs WHERE timestamp <= datetime('now', '-30 days');
+END;
