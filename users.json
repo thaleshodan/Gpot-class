@@ -1,0 +1,20 @@
+{
+    "users": [
+      {
+        "username": "admin",
+        "password": "admin",
+        "status": "active"
+      },
+      {
+        "username": "guest",
+        "password": "guest123",
+        "status": "inactive"
+      },
+      {
+        "username": "newuser",
+        "password": "newpassword",
+        "status": "active"
+      }
+    ]
+  }
+  
