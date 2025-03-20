@@ -126,3 +126,166 @@ func IsIPBlocked(ipAddress string) bool {
 	}
 	return count >= LoginAttemptLimit
 }
+
+
+
+package auth
+
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strings"
+)
+
+// Estrutura de usuário
+type User struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Status   string `json:"status"`
+}
+
+// Estrutura para carregar os usuários do arquivo JSON
+type UsersData struct {
+	Users []User `json:"users"`
+}
+
+// Função para carregar os usuários do arquivo JSON
+func LoadUsersFromJSON(filePath string) ([]User, error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao abrir o arquivo %s: %v", filePath, err)
+	}
+	defer file.Close()
+
+	// Lê o conteúdo do arquivo JSON
+	bytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao ler o arquivo %s: %v", filePath, err)
+	}
+
+	// Deserializa o conteúdo para a estrutura UsersData
+	var usersData UsersData
+	if err := json.Unmarshal(bytes, &usersData); err != nil {
+		return nil, fmt.Errorf("erro ao desserializar os dados do arquivo JSON: %v", err)
+	}
+
+	return usersData.Users, nil
+}
+
+// Função para verificar se as credenciais são válidas
+func Authenticate(username, password string) (bool, error) {
+	users, err := LoadUsersFromJSON("./sers.json")
+	if err != nil {
+		return false, err
+	}
+
+	// Normaliza o nome de usuário e senha
+	username = strings.TrimSpace(username)
+	password = strings.TrimSpace(password)
+
+	for _, user := range users {
+		if user.Username == username {
+			if user.Status == "inactive" {
+				return false, errors.New("conta inativa")
+			}
+			if password == user.Password {
+				return true, nil
+			}
+			return false, errors.New("senha incorreta")
+		}
+	}
+
+	return false, errors.New("usuário não encontrado")
+}
+
+// Função para adicionar um novo usuário
+func AddUser(username, password, status string) error {
+	users, err := LoadUsersFromJSON("./sers.json")
+	if err != nil {
+		return err
+	}
+
+	for _, user := range users {
+		if user.Username == username {
+			return errors.New("usuário já existe")
+		}
+	}
+
+	newUser := User{
+		Username: username,
+		Password: password,
+		Status:   status,
+	}
+
+	users = append(users, newUser)
+	return saveUsersToJSON(users)
+}
+
+// Função para salvar os usuários no arquivo JSON
+func saveUsersToJSON(users []User) error {
+	file, err := os.OpenFile("./sers.json", os.O_RDWR|os.O_CREATE, 0666)
+	if err != nil {
+		return fmt.Errorf("erro ao abrir o arquivo %s: %v", "./sers.json", err)
+	}
+	defer file.Close()
+
+	encoder := json.NewEncoder(file)
+	encoder.SetIndent("", "  ")
+	if err := encoder.Encode(UsersData{Users: users}); err != nil {
+		return fmt.Errorf("erro ao salvar os usuários no arquivo JSON: %v", err)
+	}
+
+	return nil
+}
+
+// Função para editar um usuário existente
+func EditUser(username, newPassword, newStatus string) error {
+	users, err := LoadUsersFromJSON("./sers.json")
+	if err != nil {
+		return err
+	}
+
+	var found bool
+	for i, user := range users {
+		if user.Username == username {
+			users[i].Password = newPassword
+			users[i].Status = newStatus
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return errors.New("usuário não encontrado")
+	}
+
+	return saveUsersToJSON(users)
+}
+
+// Função para remover um usuário
+func RemoveUser(username string) error {
+	users, err := LoadUsersFromJSON("./sers.json")
+	if err != nil {
+		return err
+	}
+
+	var indexToRemove int
+	var found bool
+	for i, user := range users {
+		if user.Username == username {
+			users = append(users[:i], users[i+1:]...)
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return errors.New("usuário não encontrado")
+	}
+
+	return saveUsersToJSON(users)
+}
+
