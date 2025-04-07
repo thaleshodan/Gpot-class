@@ -22,8 +22,29 @@ Este honeypot foi projetado para ambientes de análise e monitoramento de ameaç
 
 ## Estrutura
 
-. ├── cmd/ # Entrypoint da aplicação ├── internal/ │ ├── ssh/ # Servidor SSH falso │ ├── telnet/ # Servidor Telnet falso │ ├── web/ # Página de login fake │ ├── firewall/ # Regras de bloqueio │ └── logger/ # Registro de eventos ├── config/ # Arquivos de configuração ├── tests/ # Testes unitários ├── go.mod └── README.md
 
+```
+.
+├── cmd/                  # Ponto de entrada principal
+│   └── server/           # Implementação do servidor
+├── internal/
+│   ├── auth/             # Lógica de autenticação fake
+│   ├── fake/             # Implementações dos serviços falsos
+│   │   ├── ssh/
+│   │   ├── telnet/
+│   │   └── web/
+│   ├── firewall/         # Regras de bloqueio
+│   ├── logger/           # Registro de eventos
+│   └── models/           # Estruturas de dados compartilhadas
+├── pkg/                  # Código que pode ser reutilizado externamente (opcional)
+├── configs/             # Configurações (melhor nome que "config")
+├── scripts/             # Scripts auxiliares (se necessário)
+├── tests/               # Testes
+├── go.mod
+├── go.sum
+├── Makefile             # Para automatizar tarefas (opcional)
+└── README.md
+````
 
 ---
 
