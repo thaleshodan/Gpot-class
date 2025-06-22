@@ -1,28 +1,25 @@
-# Honeypot Avançado em Go
+# Advanced Honeypot in Go
 
-Honeypot modular e eficiente, desenvolvido em Go, focado em captura de comportamento malicioso e coleta de IOCs. Suporta conexões SSH e Telnet, simula login falso e possui sistema de firewall integrado.
-
----
-
-## Visão Geral
-
-Este honeypot foi projetado para ambientes de análise e monitoramento de ameaças. Ele captura credenciais, comandos e interações, oferecendo uma base sólida para análises automatizadas ou manuais.
+Modular and efficient honeypot, developed in Go, focused on capturing malicious behavior and collecting IOCs. It supports SSH and Telnet connections, simulates fake logins and has an integrated firewall system.
 
 ---
 
-## Funcionalidades
+## Overview
 
-- Servidor **SSH** e **Telnet** falsos com logging completo
-- Página de **login simulada** via interface web
-- **Firewall embutido** com regras por IP e porta
-- **Logs estruturados** (JSON) com suporte a exportação
-- Arquitetura **modular**, fácil de estender e integrar
+This honeypot was designed for threat analysis and monitoring environments. It captures credentials, commands and interactions, providing a solid foundation for automated or manual analysis.
+
+---
+## Features
+
+- Fake **SSH** and **Telnet** server with full logging
+- Simulated **login** page via web interface
+- **Built-in firewall** with rules by IP and port
+- **Structured logs** (JSON) with export support
+- **Modular** architecture, easy to extend and integrate
 
 ---
 
-## Estrutura
-
-
+## Structure
 ```
 .
 ├── cmd/                  # Ponto de entrada principal
@@ -48,15 +45,15 @@ Este honeypot foi projetado para ambientes de análise e monitoramento de ameaç
 
 ---
 
-## Requisitos
+## Requirements
 
 - Go 1.20+
-- Linux ou Windows
-- Acesso root (para portas privilegiadas ou firewall)
+- Linux or Windows
+- Root access (for privileged ports or firewall)
 
 ---
 
-## Instalação
+## Installation
 
 ```bash
 git clone https://github.com/thaleshodan/advanced-go-honeypot.git
@@ -65,39 +62,40 @@ go build -o honeypot ./cmd
 
 ```
 
-## Execução
+## Execution
 
 ```
 sudo ./honeypot --config ./config/config.yaml
 
 ```
 
-Parâmetros comuns:
-Flag	Descrição
---config	Caminho do arquivo de configuração
---export-logs	Exporta logs estruturados
---debug	Verbosidade detalhada
---blocklist	Lista de IPs bloqueados
-Exemplo de Log
+Common parameters:
+Flag Description
+--config Configuration file path
+--export-logs Export structured logs
+--debug Verbose verbose
+--blocklist List of blocked IPs
+Example Log
 
 {
-  "timestamp": "2025-04-07T12:10:45Z",
-  "source_ip": "192.168.1.101",
-  "protocol": "ssh",
-  "username": "admin",
-  "password": "toor",
-  "command": "uname -a",
-  "status": "attempt"
+"timestamp": "2025-04-07T12:10:45Z",
+"source_ip": "192.168.1.101",
+"protocol": "ssh",
+"username": "admin",
+"password": "toor",
+"command": "uname -a",
+"status": "attempt"
 }
+Security
 
-Segurança
+Use only in isolated environments. This honeypot should not be run on production machines. Preferably run in a container, VM or segregated network.
 
-Use apenas em ambientes isolados. Este honeypot não deve ser executado em máquinas de produção. Preferencialmente rode em container, VM ou rede segregada.
-Licença
+License
 
-MIT. Consulte o arquivo LICENSE.
-Autor
+MIT. See the LICENSE file.
+
+Author
 
 Thales Shodan
-Desenvolvedor de ferramentas defensivas e pesquisador em segurança ofensiva
+Defensive tool developer and offensive security researcher
 github.com/thaleshodan
